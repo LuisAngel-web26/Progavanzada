@@ -1,6 +1,5 @@
 
 class Persona:
-    """Clase fundamental para identificar a cualquier individuo [cite: 7]"""
     def __init__(self, idPersona: int, nombre: str, email: str):
         self.idPersona = idPersona
         self.nombre = nombre
@@ -13,7 +12,6 @@ class Persona:
         return f"Perfil de {self.nombre} actualizado correctamente"
 
 class Cliente(Persona):
-    """Usuario que realiza el consumo [cite: 9]"""
     def __init__(self, idPersona: int, nombre: str, email: str, puntosFidelidad: int):
         super().__init__(idPersona, nombre, email)
         self.puntosFidelidad = puntosFidelidad
@@ -31,7 +29,6 @@ class Cliente(Persona):
         return f"{self.nombre} ha canjeado {self.puntosFidelidad} puntos"
 
 class Empleado(Persona):
-    """Personal que opera la cafetería [cite: 12]"""
     def __init__(self, idPersona: int, nombre: str, email: str, idEmpleado: str, rol: str):
         super().__init__(idPersona, nombre, email)
         self.idEmpleado = idEmpleado
@@ -45,14 +42,12 @@ class Empleado(Persona):
 
 
 class ProductoBase:
-    """Propiedades generales de lo que se vende [cite: 16]"""
     def __init__(self, idProducto: int, nombre: str, precioBase: float):
         self.idProducto = idProducto
         self.nombre = nombre
         self.precioBase = precioBase
 
 class Bebida(ProductoBase):
-    """Productos líquidos personalizables [cite: 17]"""
     def __init__(self, idProducto: int, nombre: str, precioBase: float, tamaño: str, temperatura: str):
         super().__init__(idProducto, nombre, precioBase)
         self.tamaño = tamaño
@@ -68,7 +63,6 @@ class Bebida(ProductoBase):
         return round(precio_final, 2)
 
 class Postre(ProductoBase):
-    """Productos de repostería [cite: 19]"""
     def __init__(self, idProducto: int, nombre: str, precioBase: float, esVegano: bool, sinGluten: bool):
         super().__init__(idProducto, nombre, precioBase)
         self.esVegano = esVegano
@@ -76,7 +70,6 @@ class Postre(ProductoBase):
 
 
 class Pedido:
-    """Gestión de la transacción actual [cite: 22]"""
     def __init__(self, idPedido: int, estado: str, total: float):
         self.idPedido = idPedido
         self.productos = [] 
@@ -94,7 +87,6 @@ class Pedido:
         return True
 
 class Inventario:
-    """Control de suministros [cite: 26]"""
     def __init__(self):
         self.ingredientes = {
             "café": 50,
@@ -115,4 +107,5 @@ class Inventario:
         
         if ingredientes_bajos:
             return f"Ingredientes con stock bajo: {ingredientes_bajos}"
+
         return "Todos los ingredientes tienen stock suficiente"
