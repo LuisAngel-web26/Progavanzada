@@ -1,0 +1,86 @@
+import csv
+import os
+
+class Usuario:
+    """Clase para representar a un usuario del sistema mediante Programación Orientada a Objetos."""
+    def __init__(self, nombre, rol, password):
+        self.nombre = nombre
+        self.rol = rol
+        self.password = password
+
+class Pelicula:
+    def __init__(self, id,titulo,gener,clasif,dura,direc_imag):
+        self.id_pelicula = id
+        self.titulo = titulo
+        self.genero = gener
+        self.clasificacion = clasif
+        self.duracion = dura
+        self.direcccion_im = direc_imag
+
+class Funcion:
+    def __init__(self,id_fun,peli,sala_n,hora_in,asientos_dis):
+        self.id_funcion = id_fun
+        self.pelicula = peli
+        self.sala_numero = sala_n
+        self.hora_inicio = hora_in
+        self.asientos = asientos_dis
+
+class Producto:
+    def __init__(self,id_prod,name,categoria,precio,stock):
+        self.id_producto = id_prod
+        self.nombre = name
+        self.categoria = categoria
+        self.precio = precio
+        self.stock = stock
+
+class SistemaAutenticacion:
+    """Clase encargada de gestionar los usuarios y la autenticación leyendo desde un archivo CSV."""
+    def __init__(self, archivo_usuarios="usuarios.csv"):
+        # Usamos la ruta absoluta basada en donde esté este script
+        self.archivo_usuarios = os.path.join(os.path.dirname(__file__), archivo_usuarios)
+        self.usuarios = {} # Diccionario para almacenar objetos Usuario
+        self._cargar_usuarios()
+
+    def _cargar_usuarios(self):
+        """Carga los usuarios exclusivamente desde el archivo CSV."""
+        # Solo leemos el CSV si existe, ya no hay usuarios quemados en el código
+        if not os.path.exists(self.archivo_usuarios):
+            print(f"Advertencia: El archivo {self.archivo_usuarios} no existe. Por favor créalo o registra usuarios.")
+            return
+            
+        with open(self.archivo_usuarios, mode='r', newline='', encoding='utf-8') as archivo:
+            reader = csv.DictReader(archivo)
+            for row in reader:
+                usuario_obj = Usuario(
+                    nombre=row["nombre"],
+                    rol=row["rol"],
+                    password=row["password"]
+                )
+                self.usuarios[row["nombre"]] = usuario_obj
+
+    def registrar_usuario(self, nombre, rol, password):
+        """Guarda un nuevo usuario de forma orientada a objetos en memoria y lo añade al CSV."""
+        nuevo_usuario = Usuario(nombre, rol, password)
+        self.usuarios[nombre] = nuevo_usuario
+        
+        archivo_existe = os.path.exists(self.archivo_usuarios)
+        
+        with open(self.archivo_usuarios, mode='a', newline='', encoding='utf-8') as archivo:
+            writer = csv.DictWriter(archivo, fieldnames=["nombre", "rol", "password"])
+            if not archivo_existe:
+                writer.writeheader() # Escribe los encabezados solo si es un archivo nuevo
+            writer.writerow({
+                "nombre": nuevo_usuario.nombre,
+                "rol": nuevo_usuario.rol,
+                "password": nuevo_usuario.password
+            })
+            
+    def autenticar(self, nombre, password):
+        """
+        Verifica si el usuario y la contraseña son correctos.
+        Retorna el rol si es exitoso, de lo contrario retorna None.
+        """
+        usuario = self.usuarios.get(nombre)
+        if usuario is not None and usuario.password == password:
+            return usuario.rol
+        return None
